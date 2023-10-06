@@ -48,6 +48,7 @@ const MoviesScreen = () => {
             { label: 'Upcoming ', value: 'upcoming' }
           ]}
           onValueChange={(e)=>handleDropdownChange(e)}
+          placeholder={"Popular"}
         />
       </View>
       <View>

@@ -191,3 +191,49 @@ export const getOnAir = async () => {
     throw error; // Re-throw the error to propagate it
   }
 };
+
+export const searchMultiWithInput = async (name) => {
+  
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZjUzNzVlYzVhODMwYTliYjI3MDZiMTFmMTViMTFlMSIsInN1YiI6IjY0YTYwZmUxMDdmYWEyMDExZTAyYzE3YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.mOBLiHIxe7VSc6adBroHn9-xe12Ug3F4JiQVTrs27GI'
+
+    }
+  };
+
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/search/multi?query=${name}&include_adult=false&language=en-US&page=1`, options);
+    const data = await response.json();
+    
+    return data.results;
+
+  } catch (error) {
+    console.error(error);
+    throw error; // Re-throw the error to propagate it
+  }
+}
+
+export const searchMovieWithInput = async (name) => {
+  
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3ZjUzNzVlYzVhODMwYTliYjI3MDZiMTFmMTViMTFlMSIsInN1YiI6IjY0YTYwZmUxMDdmYWEyMDExZTAyYzE3YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.mOBLiHIxe7VSc6adBroHn9-xe12Ug3F4JiQVTrs27GI'
+    }
+  };
+
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/search/movie?query=${name}&include_adult=false&language=en-US&page=1`, options);
+    const data = await response.json();
+    
+    return data.results;
+
+  } catch (error) {
+    console.error(error);
+    throw error; // Re-throw the error to propagate it
+  }
+}
+

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
 
 
-const DropdownComponent = ({dataDropD,onValueChange}) => {
+
+const DropdownComponent = ({dataDropD,onValueChange, placeholder}) => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [dataDrop, setDataDrop] = useState(dataDropD)
+  const [placeHolder, setPlaceHolder] = useState(placeholder)
   //   [
   // { label: 'Item 1', value: '1' },
   // { label: 'Item 2', value: '2' },
@@ -31,13 +32,12 @@ const DropdownComponent = ({dataDropD,onValueChange}) => {
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         // inputSearchStyle={styles.inputSearchStyle}
-        iconStyle={styles.iconStyle}
         data={dataDrop}
         // search
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? 'Select item' : '...'}
+        placeholder={!isFocus ? `${placeHolder}`: '...'}
         // searchPlaceholder="Search..."
         value={value}
         onFocus={() => setIsFocus(true)}
@@ -48,14 +48,6 @@ const DropdownComponent = ({dataDropD,onValueChange}) => {
           setValue(item.value);
           setIsFocus(false);
         }}
-        renderLeftIcon={() => (
-          <AntDesign
-            style={styles.icon}
-            color={isFocus ? 'blue' : 'black'}
-            name="Safety"
-            size={20}
-          />
-        )}
       />
     </View>
   );
@@ -66,17 +58,16 @@ export default DropdownComponent;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    padding: 16,
+    padding: 5,
+    marginTop: 30,
+    marginLeft: 100,
+    marginRight: 100,
   },
   dropdown: {
-    height: 50,
+    height: 40,
     borderColor: 'gray',
     borderWidth: 0.5,
-    borderRadius: 8,
     paddingHorizontal: 8,
-  },
-  icon: {
-    marginRight: 5,
   },
   label: {
     position: 'absolute',
@@ -92,10 +83,6 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
   },
   inputSearchStyle: {
     height: 40,

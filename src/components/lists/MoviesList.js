@@ -13,7 +13,7 @@ const MoviesList = ({data,type}) => {
         // Fetch popular movies when component mounts
         //getPopularMovies().then(data => {
             //setMovies(data);
-            //console.log('sim!!!!', data); // Assuming data has a 'results' property containing the movie list
+            //console.log('sim!!!!', data);
         //});
         
     }, [data]);
