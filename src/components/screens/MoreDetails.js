@@ -1,104 +1,106 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import {getMovieWithId, getTvWithID} from '../../services/api'
+import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { getMovieWithId, getTvWithID } from '../../services/api';
 
-const MoreDetails = ({route}) => {
-    //const route = useRoute();
-   const [movieDetails, setMovieDetails] = useState({});
-    const navigation = useNavigation(); // Get the navigation object
-    //const [movieDetails, setMovieDetails] = useState(route.params)
-    //console.log("route params 2: ", route.params);
-    //const movieDetails  = route.params;
-    let movieData ;
-    
-    useEffect(()=>{
-        if(route.params.id.id==42){
-            return
-        }
-        const movie = loadData();
-        
-       
-      
+const MoreDetails = ({ route }) => {
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const [movieDetails, setMovieDetails] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
-    },[movieDetails])
-    const loadData=async()=>{
-        //console.log('movie dets', route.params.id.id)
-       //console.log('movie dets', route.params.type)
-       if(route.params.type=="movie")
-       movieData =  await getMovieWithId(route.params.id.id)
-       else
-       movieData = await getTvWithID(route.params.id.id)
-      
-       setMovieDetails(movieData);
-       return movieData;
-        }
-    // if (!movieDetails) {
-    //     console.log('Movie details not found.');
-    //     return null;
-    // }
+  useEffect(() => {
+    setIsLoading(true);
 
-    // const { title, imageUrl, description, popularity, release_date } = movieDetails;
+    if (route.params.id.id === 42) {
+      setIsLoading(false);
+      return;
+    }
 
-    return (
-        <View style={styles.container}>
-            {/* <Text>{route.params.id.type}</Text> */}
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                <Text style={styles.backButtonText}>Back to List</Text>
-            </TouchableOpacity>
-            <Text style={styles.title}>{movieDetails.title || movieDetails.original_name}</Text>
-            <Image source={{ uri: "https://image.tmdb.org/t/p/w500"+movieDetails.poster_path }} style={styles.image} />
-            <Text style={styles.description}>{movieDetails.overview}</Text>
-            <View style={styles.details}>
-                <Text style={styles.popularity}>Popularity: {movieDetails.popularity}</Text>
-                <Text style={styles.release_date}>Release Date: {movieDetails.release_date}</Text>
-            </View>
+    loadData();
+  }, [isFocused]);
+
+  const loadData = async () => {
+    let movieData;
+    if (route.params.type === 'movie') {
+      movieData = await getMovieWithId(route.params.id.id);
+    } else {
+      movieData = await getTvWithID(route.params.id.id);
+    }
+    setMovieDetails(movieData);
+    setIsLoading(false);
+    navigation.setOptions({ headerTitle: movieData.title || movieData.original_name });
+  };
+
+  if (!isFocused) {
+    return null;
+  }
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Loading...</Text>
+          <ActivityIndicator size="large" color="orange" />
         </View>
-    );
+      ) : (
+        <>
+          <Text style={styles.title}>{movieDetails.title || movieDetails.original_name}</Text>
+          <Image source={{ uri: `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}` }} style={styles.image} />
+          <Text style={styles.description}>{movieDetails.overview}</Text>
+          <View style={styles.details}>
+            <Text style={styles.popularity}>Popularity: {movieDetails.popularity}</Text>
+            <Text style={styles.releaseDate}>
+              Release Date: {movieDetails.release_date || movieDetails.first_air_date}
+            </Text>
+          </View>
+        </>
+      )}
+    </ScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-    },
-    backButton: {
-        position: 'absolute',
-        top: 10,
-        left: 10,
-    },
-    backButtonText: {
-        color: 'blue',
-        fontSize: 16,
-    },
-    title: {
-        textAlign: 'center',
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginTop: 20,
-    },
-    image: {
-        width: '100%',
-        height: 300,
-        resizeMode: 'cover',
-        marginTop: 20,
-    },
-    description: {
-        marginTop: 20,
-        color: '#999999',
-        fontSize: 16,
-    },
-    details: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    popularity: {
-        fontSize: 14,
-    },
-    releaseDate: {
-        fontSize: 14,
-    },
+  container: {
+    padding: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  title: {
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  image: {
+    width: '100%',
+    height: 400,
+    resizeMode: 'cover',
+    marginTop: 20,
+  },
+  description: {
+    marginTop: 20,
+    color: '#999999',
+    fontSize: 16,
+  },
+  details: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  popularity: {
+    fontSize: 14,
+  },
+  releaseDate: {
+    fontSize: 14,
+  },
 });
 
 export default MoreDetails;

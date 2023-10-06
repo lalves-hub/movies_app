@@ -1,40 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import MoviesList from '../lists/MoviesList';
-import { getPopularMovies, getNowPlaying } from '../../services/api';
+import { getPopularMovies, getNowPlaying, getTopRatedMovies, getUpcoming } from '../../services/api';
 import DropdownComponent from '../lists/Dropdown';
 
-const MoviesScreen = () => {
+const MoviesScreen = ({ navigation }) => {
   const [movieData, setMovieData] = useState([]);
-  const [selectedDropdownValue, setSelectedDropdownValue] = useState(null);
+  const [selectedDropdownValue, setSelectedDropdownValue] = useState('popular');
+  const [isLoading, setIsLoading] = useState(true);
 
- // useEffect(() => {
-    // Fetch the movie data based on the selected dropdown value
-    const fetchMovieData = async () => {
-      try {
-        if (selectedDropdownValue === 'popular') {
-          const dataPopularMovies = await getPopularMovies();
-          //console.log('Popular Movies:', dataPopularMovies);
-          setMovieData(dataPopularMovies);
-        } else if (selectedDropdownValue === 'now_playing') {
-          const dataNowPlaying = await getNowPlaying();
-          //console.log('Now Playing Movies:', dataNowPlaying);
-          setMovieData(dataNowPlaying);
-        }
-      } catch (error) {
-        //console.error('Error fetching movie data:', error);
-        // Handle error, show an error message, etc.
+  const fetchMovieData = async (selectedValue) => {
+    try {
+      setIsLoading(true);
+
+      let data = [];
+      if (selectedValue === 'popular') {
+        data = await getPopularMovies();
+      } else if (selectedValue === 'now_playing') {
+        data = await getNowPlaying();
+      } else if (selectedValue === 'top_rated') {
+        data = await getTopRatedMovies();
+      } else if (selectedValue === 'upcoming') {
+        data = await getUpcoming();
       }
-    };
-  
-    if (selectedDropdownValue) {
-      fetchMovieData();
+
+      // Simulates delay for loading to show
+      await new Promise((resolve) => setTimeout(resolve, 400));
+
+      setMovieData(data);
+    } catch (error) {
+      console.error('Error fetching movie data:', error);
+    } finally {
+      setIsLoading(false); 
     }
- // }, [selectedDropdownValue]);  
+  };
+
+  useEffect(() => {
+    fetchMovieData(selectedDropdownValue);
+  }, [selectedDropdownValue]);
 
   const handleDropdownChange = (value) => {
-    
     setSelectedDropdownValue(value.value);
+    fetchMovieData(value.value);
   };
 
   return (
@@ -43,18 +50,24 @@ const MoviesScreen = () => {
         <DropdownComponent
           dataDropD={[
             { label: 'Popular', value: 'popular' },
-            { label: 'Now Playing', value: 'now_playing'} ,
-            { label: 'Top Rated ', value: 'top_rated' },
-            { label: 'Upcoming ', value: 'upcoming' }
+            { label: 'Now Playing', value: 'now_playing' },
+            { label: 'Top Rated', value: 'top_rated' },
+            { label: 'Upcoming', value: 'upcoming' }
           ]}
-          onValueChange={(e)=>handleDropdownChange(e)}
-          placeholder={"Popular"}
+          onValueChange={handleDropdownChange}
+          placeholder={'Popular'}
         />
       </View>
-      <View>
-        {/* Pass the correct data prop based on selectedDropdownValue */}
-        <MoviesList data={movieData} type = "movie" />
-      </View>
+
+      {isLoading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="orange" />
+        </View>
+      ) : (
+        <View>
+          <MoviesList data={movieData} type="movie" navigation={navigation} />
+        </View>
+      )}
     </>
   );
 };

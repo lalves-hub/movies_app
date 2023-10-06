@@ -2,7 +2,6 @@ import { getPopularMovies } from '../../services/api';
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, Text, Image, StyleSheet } from 'react-native';
 import MoviesContainer from '../containers/MovieContainer'
-import handleMoreDetails from '../containers/MovieContainer'
 
 
 const MoviesList = ({data,type}) => {
@@ -19,17 +18,12 @@ const MoviesList = ({data,type}) => {
     }, [data]);
     //console.log("MOVIE DATAA", movies)
 
-    // const handleMoreDetails = (title, poster_path, overview, popularity, release_date) => {
-    //     // Handle more details logic here
-    //     console.log('More Details:', title, poster_path, overview, popularity, release_date);
-    // };
-
     const renderItem = ({ item }) => (
         <MoviesContainer
             id = {item.id}
             title={item.title || item.original_name}
             popularity={item.popularity}
-            release_date={item.release_date}
+            release_date={item.release_date || item.first_air_date}
             imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
             poster_path={item.poster_path}
             overview={item.overview}
@@ -40,9 +34,9 @@ const MoviesList = ({data,type}) => {
     return (
         <>
         
-        <View style={{ paddingTop: '10%' }}>
+        <View>
         <FlatList
-            data={movies} // Use the movies state here
+            data={movies} 
             renderItem={renderItem}
             keyExtractor={item => item.id.toString()}
         />

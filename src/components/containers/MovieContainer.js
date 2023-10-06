@@ -9,36 +9,13 @@ const MoviesContainer = ({ id, title, popularity, release_date, imageUrl, poster
     //console.log('title', title)
     const navigation = useNavigation();
 
-    // const handleMoreDetails = (movieDetails) => {
-    //     navigation.navigate('MoreDetails', movieDetails);
-    //   };
-
-
     const handleMoreDetails = (id) => {
-        // console.log('Navigating to MoreDetails with movieDetails:', {
-        //     title,
-        //     imageUrl: `https://image.tmdb.org/t/p/w500${poster_path}`,
-        //     description: overview,
-        //     popularity,
-        //     release_date,
-        // });
-        //console.log("this one", movieDetails)
 
         navigation.navigate('MoreDetails', {
             id,
             type
         });
 
-
-        // navigation.navigate('MoreDetails', {
-        //     movieDetails: {
-        //         title,
-        //         imageUrl: `https://image.tmdb.org/t/p/w500${poster_path}`,
-        //         description: overview,
-        //         popularity,
-        //         release_date,
-        //     },
-        // });
     };
 
 
@@ -54,21 +31,6 @@ const MoviesContainer = ({ id, title, popularity, release_date, imageUrl, poster
                     onPress={() => handleMoreDetails({id})}>
                     <Text style={styles.detailsButtonText}>More Details</Text>
                 </TouchableOpacity>
-
-
-                {/* <TouchableOpacity
-                    style={styles.detailsButton}
-                    onPress={() => handleMoreDetails({
-                        title,
-                        imageUrl: `https://image.tmdb.org/t/p/w500${poster_path}`,
-                        description: overview,
-                        popularity,
-                        release_date,
-                    })}
-                >
-                    <Text style={styles.detailsButtonText}>More Details</Text>
-                </TouchableOpacity> */}
-
 
             </View>
         </View>
@@ -103,9 +65,10 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     detailsButton: {
-        backgroundColor: 'blue',
+        backgroundColor: 'orange',
         padding: 10,
         borderRadius: 5,
+        width: 240
     },
     detailsButtonText: {
         color: 'white',

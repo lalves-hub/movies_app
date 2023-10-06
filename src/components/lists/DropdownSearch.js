@@ -4,12 +4,11 @@ import { Dropdown } from 'react-native-element-dropdown';
 
 
 
-const DropdownComponent = ({dataDropD,onValueChange, placeholder}) => {
+const DropdownSearch = ({dataDropD,onValueChange, placeholder}) => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [dataDrop, setDataDrop] = useState(dataDropD)
   const [placeHolder, setPlaceHolder] = useState(placeholder)
- 
 
   const renderLabel = () => {
     if (value || isFocus) {
@@ -24,6 +23,7 @@ const DropdownComponent = ({dataDropD,onValueChange, placeholder}) => {
   return (
     <View style={styles.container}>
       {renderLabel()}
+      <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>Choose Search Type *</Text>
       <Dropdown
         style={[styles.dropdown, isFocus && { borderColor: 'orange' }]}
         placeholderStyle={styles.placeholderStyle}
@@ -47,15 +47,13 @@ const DropdownComponent = ({dataDropD,onValueChange, placeholder}) => {
   );
 };
 
-export default DropdownComponent;
+export default DropdownSearch;
 
 const styles = StyleSheet.create({
   container: {
     padding: 0,
-    marginTop: 20,
-    marginLeft: 100,
-    marginRight: 100,
-    marginBottom: 20
+    marginTop: 0,
+    marginLeft: 28
   },
   dropdown: {
     height: 40,
@@ -72,5 +70,5 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
-  },
+  }
 });
